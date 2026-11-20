@@ -26,9 +26,9 @@ langgraph
 # Database
 # -------------------------------
 sqlalchemy
-psycopg[binary]
 alembic
-pgvector
+pyodbc
+qdrant-client
 
 # -------------------------------
 # Document Processing
