@@ -1,0 +1,64 @@
+
+# -------------------------------
+# Backend Framework
+# -------------------------------
+fastapi
+uvicorn[standard]
+python-multipart
+langchain-text-splitters
+
+# -------------------------------
+# Environment & Configuration
+# -------------------------------
+python-dotenv
+pydantic
+pydantic-settings
+
+# -------------------------------
+# AI & Multi-Agent Framework
+# -------------------------------
+langchain
+langchain-core
+langchain-groq
+langgraph
+
+# -------------------------------
+# Database
+# -------------------------------
+sqlalchemy
+psycopg[binary]
+alembic
+pgvector
+
+# -------------------------------
+# Document Processing
+# -------------------------------
+pymupdf
+pillow
+paddleocr
+paddlepaddle
+
+
+# -------------------------------
+# HTTP Requests
+# -------------------------------
+httpx
+requests
+
+# -------------------------------
+# Authentication & Security
+# -------------------------------
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt
+
+# -------------------------------
+# Testing
+# -------------------------------
+pytest
+pytest-asyncio
+
+# -------------------------------
+# Logging
+# -------------------------------
+loguru
