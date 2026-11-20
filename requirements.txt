@@ -46,6 +46,11 @@ httpx
 requests
 
 # -------------------------------
+# RAG embeddings
+# -------------------------------
+sentence-transformers
+
+# -------------------------------
 # Authentication & Security
 # -------------------------------
 python-jose[cryptography]
