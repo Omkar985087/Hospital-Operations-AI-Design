@@ -23,7 +23,7 @@ class ragpipeline:
         
         store_embedding(
             chunks=chunks,
-            embedding=embedding,
+            embeddings=embedding,
             patient_id=patient_id,
             document_id=document_id
         )

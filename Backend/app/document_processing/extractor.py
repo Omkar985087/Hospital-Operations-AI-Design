@@ -22,7 +22,7 @@ def extract_text_from_pdf(file_path: str) -> str:
 
 
 if __name__ == "__main__":
-    file_path = "storage/sample_report.pdf"
+    file_path = "backend/storage/sample_report.pdf"
 
     text = extract_text_from_pdf(file_path)
 
