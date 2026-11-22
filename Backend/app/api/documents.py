@@ -3,10 +3,15 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from pathlib import Path
 import shutil
 import uuid
+from pydantic import BaseModel
+from app.rag.generator import raggenerator
 
 from app.rag.pipeline import ragpipeline
 
 router = APIRouter()
+class QuestionRequest(BaseModel):
+    patient_id: str
+    question: str
 
 UPLOAD_DIR = Path("storage")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -55,3 +60,39 @@ async def upload_document(
 
     finally:
         await file.close()
+
+rag_generator = None
+
+
+@router.post("/ask")
+def ask_document(request: QuestionRequest):
+    global rag_generator
+
+    if not request.patient_id.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Patient ID cannot be empty."
+        )
+
+    if not request.question.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Question cannot be empty."
+        )
+
+    try:
+        if rag_generator is None:
+            rag_generator = raggenerator()
+
+        result = rag_generator.generate_answer(
+            question=request.question,
+            patient_id=request.patient_id
+        )
+
+        return result
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Question answering failed: {str(e)}"
+        )
