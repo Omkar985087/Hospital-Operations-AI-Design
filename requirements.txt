@@ -67,3 +67,4 @@ pytest-asyncio
 # Logging
 # -------------------------------
 loguru
+email-validator
