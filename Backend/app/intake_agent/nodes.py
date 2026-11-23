@@ -78,17 +78,39 @@ def extract_patient_information(state:dict)->dict:
     )
     
     reponse=llm.invoke([
-        (
-            "system",INTAKE_EXTRACTION_PROMPT
-        ),
-        (
-            "human",
-            state['user_message']
-        )
+        ("system",INTAKE_EXTRACTION_PROMPT),
+        ("human",state['user_message'])
     ])
     
     extracted_data=json.loads(reponse.content)
     
+    existing_data = state.get("patient_data", {})
+
+    updated_data = existing_data.copy()
+
+    # Only replace existing values with newly extracted,
+    # non-empty information
+    for key, value in extracted_data.items():
+        if value is not None and str(value).strip():
+            updated_data[key] = value
+
     return {
-        "patient_data":extracted_data
+        "patient_data": updated_data
+    }
+    
+def followup_node(state:dict)->dict:
+    missing_fields=state.get("missing_fields",[])
+    
+    field_questions = {
+        "name": "Please provide the patient's full name.",
+        "date_of_birth": "Please provide the patient's date of birth in YYYY-MM-DD format.",
+        "phone_no": "Please provide the patient's 10-digit phone number."
+    }
+    
+    questions=[field_questions[field]
+               for field in missing_fields
+               if field in field_questions]
+    
+    return {
+        "assistant_response": " ".join(questions)
     }

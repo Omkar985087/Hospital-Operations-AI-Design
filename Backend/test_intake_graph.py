@@ -4,10 +4,7 @@ from app.intake_agent.graph import intake_graph
 
 # Test patient message
 initial_state = {
-    "user_message": (
-        "Register Rahul Sharma, born on 15 March 1995. "
-        "His phone number is 9876543210."
-    )
+  "user_message": "Register Rahul Sharma, born on 15 March 1995."
 }
 
 # Execute LangGraph

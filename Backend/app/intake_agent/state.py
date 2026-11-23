@@ -8,3 +8,4 @@ class intakestate(TypedDict):
     confirmed:bool
     patient_id:Optional[str]
     assistant_response:str
+    conversation_id: str
