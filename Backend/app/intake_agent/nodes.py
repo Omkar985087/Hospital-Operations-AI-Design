@@ -1,5 +1,14 @@
-from datetime import date
+import json
+import os
 import re
+
+from datetime import date
+from dotenv import load_dotenv
+from langchain_groq import ChatGroq
+
+from app.intake_agent.prompts import INTAKE_EXTRACTION_PROMPT
+
+load_dotenv()
 
 def validate_patient_data(state:dict)->dict:
     patient_data=state.get("patient_data",{})
@@ -60,4 +69,26 @@ def validate_patient_data(state:dict)->dict:
         "is_valid": True,
         "missing_fields": [],
         "assistant_response": "Patient information validated successfully."
+    }
+    
+def extract_patient_information(state:dict)->dict:
+    llm=ChatGroq(
+        model="openai/gpt-oss-20b",
+        temperature=0
+    )
+    
+    reponse=llm.invoke([
+        (
+            "system",INTAKE_EXTRACTION_PROMPT
+        ),
+        (
+            "human",
+            state['user_message']
+        )
+    ])
+    
+    extracted_data=json.loads(reponse.content)
+    
+    return {
+        "patient_data":extracted_data
     }
