@@ -14,7 +14,7 @@ def validate_patient_data(state:dict)->dict:
     patient_data=state.get("patient_data",{})
     
     required_fields=[
-        "full_name",
+        "name",
         "date_of_birth",
         "phone_no"
     ]
