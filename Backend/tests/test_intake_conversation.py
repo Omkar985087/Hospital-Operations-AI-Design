@@ -44,3 +44,14 @@ print("Patient data:", result2["patient_data"])
 print("Missing fields:", result2["missing_fields"])
 print("Validation:", result2["is_valid"])
 print("Agent:", result2["assistant_response"])
+
+print("\n========== MESSAGE 3 ==========")
+
+result = intake_graph.invoke(
+    {"user_message": "Yes"},
+    config=config
+)
+
+print("Confirmation:", result["confirmed"])
+print("Registration status:", result["registration_status"])
+print("Agent:", result["assistant_response"])

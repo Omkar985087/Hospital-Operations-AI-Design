@@ -10,3 +10,4 @@ class intakestate(TypedDict):
     patient_id:Optional[str]
     assistant_response:str
     conversation_id: str
+    registration_status: str

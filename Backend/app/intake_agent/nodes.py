@@ -134,3 +134,38 @@ def prepare_registration_confirmation(state:dict)->dict:
         "awaiting_confirmation":True
     }
     
+def handle_registration_confirmation(state:dict)->dict:
+    response=state.get("user_message","").strip().lower()
+    
+    yes_responses = {"yes", "y", "yeah", "yep", "confirm", "confirmed"}
+    no_responses = {"no", "n", "nope", "cancel", "cancel registration"}
+   
+    if response in yes_responses:
+         return {
+            "confirmed": True,
+            "awaiting_confirmation": False,
+            "registration_status": "CONFIRMED",
+            "assistant_response": (
+                "Registration confirmed. Proceeding with patient registration."
+            )
+        }
+    elif response in no_responses:
+        return {
+            "confirmed": False,
+            "awaiting_confirmation": False,
+            "registration_status": "CANCELLED",
+            "assistant_response": (
+                "Patient registration has been cancelled. "
+                "No patient record was created."
+            )
+        }
+        
+    return {
+        "confirmed": False,
+        "awaiting_confirmation": True,
+        "registration_status": "PENDING",
+        "assistant_response": (
+            "Please respond with Yes to confirm registration "
+            "or No to cancel it."
+        )
+    }
