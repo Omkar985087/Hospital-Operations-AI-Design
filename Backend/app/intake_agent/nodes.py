@@ -114,3 +114,23 @@ def followup_node(state:dict)->dict:
     return {
         "assistant_response": " ".join(questions)
     }
+    
+def prepare_registration_confirmation(state:dict)->dict:
+    patient_data=state.get("patient_data",{})
+    
+    if not state.get("is_valid"):
+        return {"assistant_response":"Patient information is incomplete"}
+    
+    message = (
+        "Please confirm the patient registration:\n\n"
+        f"Name: {patient_data.get('name')}\n"
+        f"Date of Birth: {patient_data.get('date_of_birth')}\n"
+        f"Phone: {patient_data.get('phone_no')}\n\n"
+        "Do you want to register this patient? (Yes/No)"
+    )
+    
+    return {
+        "assistant_response":message,
+        "awaiting_confirmation":True
+    }
+    
