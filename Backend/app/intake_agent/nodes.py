@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 
 from app.intake_agent.prompts import INTAKE_EXTRACTION_PROMPT
+from app.database.connection import SessionLocal
+from app.services.patient_service import register_patient
 
 load_dotenv()
 
@@ -169,3 +171,51 @@ def handle_registration_confirmation(state:dict)->dict:
             "or No to cancel it."
         )
     }
+    
+
+def register_patient_node(state: dict) -> dict:
+    """
+    Registers a patient in SQL Server after explicit confirmation.
+    """
+
+    if not state.get("confirmed"):
+        return {
+            "registration_status": "CANCELLED",
+            "assistant_response": "Registration was not confirmed."
+        }
+
+    patient_data = state.get("patient_data", {})
+
+    # Map Intake Agent fields to SQL Server column names
+    registration_data = {
+        "full_name": patient_data["name"],
+        "date_of_birth": patient_data["date_of_birth"],
+        "phone": patient_data["phone_no"]
+    }
+
+    db = SessionLocal()
+
+    try:
+        patient_record = register_patient(db, registration_data)
+
+        return {
+            "patient_id": patient_record.patient_id,
+            "registration_status": "REGISTERED",
+            "assistant_response": (
+                "Patient registered successfully!\n\n"
+                f"Patient ID: {patient_record.patient_id}\n"
+                f"Name: {patient_record.full_name}"
+            )
+        }
+
+    except Exception as e:
+        return {
+            "registration_status": "FAILED",
+            "assistant_response": (
+                "Patient registration failed. "
+                "Please try again or contact the administrator."
+            )
+        }
+
+    finally:
+        db.close()
