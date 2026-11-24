@@ -6,9 +6,16 @@ from app.intake_agent.graph import intake_graph
 initial_state = {
   "user_message": "Register Rahul Sharma, born on 15 March 1995."
 }
+config = {
+    "configurable": {
+        "thread_id": "intake-test-001"
+    }
+}
 
-# Execute LangGraph
-result = intake_graph.invoke(initial_state)
+result = intake_graph.invoke(
+    initial_state,
+    config=config
+)
 
 print("\n========== INTAKE AGENT RESULT ==========")
 
