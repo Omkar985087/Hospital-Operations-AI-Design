@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.api.documents import router as documents_router
 from app.api.patients import router as patients_router
+from app.api.appointments import router as appointments_router
 
 app=FastAPI(
     title="Hospital Operations AI Design",
@@ -19,6 +20,8 @@ app.include_router(
     prefix="/patients",
     tags=["Patients"]
 )
+
+app.include_router(appointments_router)
 
 @app.get("/")
 def home():
