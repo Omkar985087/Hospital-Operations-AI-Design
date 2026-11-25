@@ -251,3 +251,76 @@ def book_appointment(
 
     except Exception:
         raise
+
+def get_patient_appointments(db, patient_id: str):
+    query = text("""
+        SELECT
+            a.appointment_id,
+            a.patient_id,
+            d.doctor_name,
+            d.specialization,
+            a.appointment_date,
+            a.start_time,
+            a.end_time,
+            a.appointment_status,
+            a.reason
+        FROM dbo.Appointments a
+        INNER JOIN dbo.Doctors d
+            ON a.doctor_id = d.doctor_id
+        WHERE a.patient_id = :patient_id
+        ORDER BY a.appointment_date DESC, a.start_time DESC
+    """)
+
+    result = db.execute(
+        query,
+        {"patient_id": patient_id}
+    )
+
+    return [
+        dict(row._mapping)
+        for row in result
+    ]
+    
+def cancel_appointment(db, appointment_id: int):
+    query = text("""
+        UPDATE dbo.Appointments
+        SET
+            appointment_status = 'CANCELLED',
+            updated_at = GETDATE()
+        WHERE appointment_id = :appointment_id
+          AND appointment_status = 'BOOKED'
+    """)
+
+    result = db.execute(
+        query,
+        {"appointment_id": appointment_id}
+    )
+
+    db.commit()
+
+    if result.rowcount == 0:
+        raise ValueError(
+            "Appointment not found or is not currently booked."
+        )
+
+    return {
+        "appointment_id": appointment_id,
+        "appointment_status": "CANCELLED"
+    }
+    
+def get_doctors(db):
+    query = text("""
+        SELECT
+            doctor_id,
+            doctor_name,
+            specialization
+        FROM dbo.Doctors
+        ORDER BY doctor_name
+    """)
+
+    result = db.execute(query)
+
+    return [
+        dict(row._mapping)
+        for row in result
+    ]
